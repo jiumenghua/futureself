@@ -1,0 +1,5 @@
+export { default as FloatingAssistant } from './FloatingAssistant.vue'
+export { default as AssistantAvatar } from './AssistantAvatar.vue'
+export { default as AssistantPanel } from './AssistantPanel.vue'
+export { default as AssistantBubble } from './AssistantBubble.vue'
+export { default as AssistantContextMenu } from './AssistantContextMenu.vue'

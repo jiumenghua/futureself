@@ -1,0 +1,210 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   FutureSelf Design Tokens — CSS Custom Properties
+   所有 Token 集中在 CSS 变量中，Tailwind 主题为辅助
+   ============================================================ */
+
+:root {
+  /* ===== Brand Colors ===== */
+  --fs-brand-50:  #EFF6FF;
+  --fs-brand-100: #DBEAFE;
+  --fs-brand-200: #BFDBFE;
+  --fs-brand-300: #93C5FD;
+  --fs-brand-400: #60A5FA;
+  --fs-brand-500: #3B82F6;
+  --fs-brand-600: #2563EB;
+  --fs-brand-700: #1D4ED8;
+  --fs-brand-800: #1E40AF;
+  --fs-brand-900: #1E3A8A;
+
+  /* ===== AI Gradients ===== */
+  --fs-ai-gradient: linear-gradient(135deg, #3B82F6 0%, #60A5FA 50%, #93C5FD 100%);
+  --fs-ai-glow: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.12) 0%, transparent 70%);
+  --fs-ai-pulse: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, rgba(59, 130, 246, 0) 60%);
+
+  /* ===== Neutral Scale ===== */
+  --fs-neutral-0:   #FFFFFF;
+  --fs-neutral-50:  #F5F9FF;
+  --fs-neutral-100: #EDF2FA;
+  --fs-neutral-200: #E1E8F2;
+  --fs-neutral-300: #CDD5E2;
+  --fs-neutral-400: #A1A9B8;
+  --fs-neutral-500: #747D92;
+  --fs-neutral-600: #555D70;
+  --fs-neutral-700: #3A4054;
+  --fs-neutral-800: #222638;
+  --fs-neutral-900: #131620;
+
+  /* ===== Semantic Colors ===== */
+  --fs-success-50:  #EDFCF5;
+  --fs-success-500: #22C55E;
+  --fs-success-700: #15803D;
+
+  --fs-warning-50:  #FFF9EB;
+  --fs-warning-500: #F59E0B;
+  --fs-warning-700: #B45309;
+
+  --fs-error-50:  #FFF0F0;
+  --fs-error-500: #EF4444;
+  --fs-error-700: #B91C1C;
+
+  /* ===== Surface Colors ===== */
+  --fs-surface-page:     var(--fs-neutral-50);
+  --fs-surface-card:     var(--fs-neutral-0);
+  --fs-surface-elevated: var(--fs-neutral-0);
+  --fs-surface-overlay:  rgba(255, 255, 255, 0.85);
+  --fs-surface-backdrop: rgba(19, 22, 54, 0.4);
+
+  /* ===== Typography ===== */
+  --fs-font-sans:   'Inter', 'PingFang SC', 'HarmonyOS Sans SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  --fs-font-mono:   'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+
+  --fs-font-light:    300;
+  --fs-font-normal:   400;
+  --fs-font-medium:   500;
+  --fs-font-semibold: 600;
+  --fs-font-bold:     700;
+
+  /* ===== Spacing (4px grid) ===== */
+  --fs-space-1:   4px;
+  --fs-space-2:   8px;
+  --fs-space-3:   12px;
+  --fs-space-4:   16px;
+  --fs-space-5:   20px;
+  --fs-space-6:   24px;
+  --fs-space-8:   32px;
+  --fs-space-10:  40px;
+  --fs-space-12:  48px;
+  --fs-space-16:  64px;
+  --fs-space-20:  80px;
+  --fs-space-24:  96px;
+
+  /* ===== Border Radius ===== */
+  --fs-radius-xs:   4px;
+  --fs-radius-sm:   6px;
+  --fs-radius-md:   10px;
+  --fs-radius-lg:   14px;
+  --fs-radius-xl:   20px;
+  --fs-radius-full: 9999px;
+
+  /* ===== Shadows ===== */
+  --fs-shadow-none: none;
+  --fs-shadow-sm:   0 1px 2px rgba(19, 22, 54, 0.04), 0 1px 3px rgba(19, 22, 54, 0.06);
+  --fs-shadow-md:   0 2px 4px rgba(19, 22, 54, 0.04), 0 4px 12px rgba(19, 22, 54, 0.08);
+  --fs-shadow-lg:   0 4px 8px rgba(19, 22, 54, 0.04), 0 8px 24px rgba(19, 22, 54, 0.12);
+  --fs-shadow-xl:   0 8px 16px rgba(19, 22, 54, 0.04), 0 16px 48px rgba(19, 22, 54, 0.16);
+  --fs-shadow-ai:   0 0 0 1px rgba(59, 130, 246, 0.1), 0 4px 16px rgba(59, 130, 246, 0.08);
+
+  /* ===== Layout ===== */
+  --fs-sidebar-width:       240px;
+  --fs-sidebar-collapsed:   72px;
+  --fs-topbar-height:       56px;
+  --fs-content-max:         960px;
+  --fs-page-padding-x:      32px;
+  --fs-page-padding-y:      32px;
+
+  /* ===== Animation Duration ===== */
+  --fs-duration-instant: 100ms;
+  --fs-duration-fast:    200ms;
+  --fs-duration-normal:  300ms;
+  --fs-duration-slow:    500ms;
+  --fs-duration-glacial: 800ms;
+
+  /* ===== Easing Curves ===== */
+  --fs-ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --fs-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --fs-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --fs-ease-bounce: cubic-bezier(0.5, 1.8, 0.8, 0.8);
+  --fs-ease-ai:     cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+   Global Base Styles
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--fs-font-sans);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background: var(--fs-surface-page);
+  color: var(--fs-neutral-700);
+  line-height: 1.6;
+  overflow: hidden; /* 防止整体页面滚动 */
+  min-height: 100vh;
+}
+
+#app {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--fs-neutral-300);
+  border-radius: var(--fs-radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--fs-neutral-400);
+}
+
+/* ===== Selection ===== */
+::selection {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--fs-neutral-800);
+}
+
+/* ===== Focus Ring ===== */
+:focus-visible {
+  outline: 2px solid var(--fs-brand-400);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ===== Link ===== */
+a {
+  color: var(--fs-brand-600);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--fs-brand-700);
+}
+
+/* ===== Paragraph max-width (readability) ===== */
+p {
+  max-width: 680px;
+}
+
+/* ===== Reduced Motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

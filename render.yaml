@@ -1,0 +1,22 @@
+# ============================================================
+# render.yaml — Render 蓝图配置（可选）
+# 首次部署建议使用 Render Dashboard 手动创建 Web Service
+# 后续可通过此文件实现 Blueprint 一键部署
+# ============================================================
+services:
+  - type: web
+    name: futureself-api
+    runtime: node
+    rootDir: server
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: PORT
+        value: 3000
+      # ⚠️ 以下敏感变量建议在 Render Dashboard 手动设置，勿写入此文件
+      # - key: MONGODB_URI
+      # - key: DEEPSEEK_API_KEY
+      # - key: AES_ENCRYPTION_KEY
+      # - key: CORS_ORIGIN
