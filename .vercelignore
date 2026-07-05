@@ -1,12 +1,12 @@
 # ============================================================
 # .vercelignore — Vercel 部署时排除的文件
-# 后端代码由 Render 部署，不在 Vercel 上构建
+# 后端 server/ 代码现在需要保留（供 API serverless 函数使用）
 # ============================================================
-server/
 docs/
-node_modules/
 .git/
 .gitignore
 *.md
 .env
 .env.example
+render.yaml
+render-payload.json

@@ -23,8 +23,19 @@ const router = Router()
 const dbOnline = () => getConnectionState()
 
 // ---- 文件上传配置 ----
-const UPLOAD_DIR = path.resolve(__dirname, '../../static/upload')
-if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true })
+// Vercel Serverless 只有 /tmp 可写；本地开发使用 static/upload
+let UPLOAD_DIR: string
+try {
+  UPLOAD_DIR = path.resolve(__dirname, '../../static/upload')
+  if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true })
+  // 测试是否可写
+  fs.accessSync(UPLOAD_DIR, fs.constants.W_OK)
+} catch {
+  // Serverless 环境回退到 /tmp
+  UPLOAD_DIR = '/tmp/upload'
+  if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true })
+  console.log('[Upload] 使用 Serverless 临时目录:', UPLOAD_DIR)
+}
 
 const ALLOWED_EXT = ['.jpg', '.jpeg', '.png', '.webp', '.pdf', '.txt', '.docx']
 const MAX_FILE_SIZE = 10 * 1024 * 1024

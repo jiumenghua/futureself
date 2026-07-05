@@ -5,9 +5,16 @@
 
 import dotenv from 'dotenv'
 import path from 'path'
+import fs from 'fs'
 
-// 加载项目根目录 .env
-dotenv.config({ path: path.resolve(__dirname, '..', '.env') })
+// 加载 .env（仅在本地开发时存在，Vercel 通过 Dashboard 注入环境变量）
+const envPath = path.resolve(__dirname, '..', '.env')
+if (fs.existsSync(envPath)) {
+  dotenv.config({ path: envPath })
+  console.log('[Config] 已加载本地 .env 文件')
+} else {
+  console.log('[Config] 使用系统环境变量（Vercel / Render 生产模式）')
+}
 
 function requireEnv(key: string): string {
   const val = process.env[key]

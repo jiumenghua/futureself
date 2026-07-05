@@ -5,6 +5,7 @@
 
 import express from 'express'
 import path from 'path'
+import fs from 'fs'
 import cors from 'cors'
 import { config } from './config'
 import { errorHandler } from './middleware/errorHandler'
@@ -51,7 +52,17 @@ app.get('/api/health', (_req, res) => {
 })
 
 // ---- 静态文件（上传目录） ----
-app.use('/static', express.static(path.resolve(__dirname, '..', 'static')))
+// Serverless 环境仅 /tmp 可写，静态目录可能不可用；不影响 API 功能
+const staticDir = (() => {
+  try {
+    const dir = path.resolve(__dirname, '..', 'static')
+    fs.accessSync(dir)
+    return dir
+  } catch {
+    return '/tmp/upload' // Serverless 回退
+  }
+})()
+app.use('/static', express.static(staticDir))
 
 // ---- 业务路由 ----
 app.use('/api/chat', chatRoutes)
