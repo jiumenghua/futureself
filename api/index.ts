@@ -1,9 +1,9 @@
 // ============================================================
 // api/index.ts — Vercel Serverless Function 入口
-// 将 Express 应用导出为 Vercel Serverless 处理器
+// 导入编译后的 Express 应用（server/dist/app.js）
 // ============================================================
 
-import app from '../server/src/app'
+import app from '../server/dist/app.js'
 
 // ---- MongoDB 连接缓存 ----
 let dbReady = false
@@ -12,7 +12,7 @@ let dbPromise: Promise<void> | null = null
 app.use('/api', async (_req, _res, next) => {
   if (!dbReady) {
     if (!dbPromise) {
-      import('../server/src/db.js').then(({ connectDB }) => {
+      import('../server/dist/db.js').then(({ connectDB }) => {
         dbPromise = connectDB()
       }).catch(() => {
         dbPromise = Promise.resolve()
