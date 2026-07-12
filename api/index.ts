@@ -4,29 +4,46 @@
 // Vercel 自动将 /api/* 路由到此函数
 // ============================================================
 
-import app from '../server/src/app'
-import { connectDB } from '../server/src/db'
+import type { VercelRequest, VercelResponse } from '@vercel/node'
 
-// ---- 全局 MongoDB 连接缓存（Vercel 热启动复用） ----
+// ---- MongoDB 连接缓存（Vercel 热启动复用） ----
 let dbReady = false
 let dbPromise: Promise<void> | null = null
 
-// ---- 每个请求前确保数据库已连接 ----
-app.use('/api', async (_req, _res, next) => {
-  if (!dbReady) {
-    if (!dbPromise) {
-      dbPromise = connectDB()
-    }
+async function ensureDB() {
+  if (dbReady) return
+  if (!dbPromise) {
     try {
-      await dbPromise
-      dbReady = true
+      const { connectDB } = await import('../server/src/db.js')
+      dbPromise = connectDB()
     } catch {
-      // MongoDB 不可用时仍继续处理请求（降级模式）
+      dbPromise = Promise.resolve()
     }
   }
-  next()
-})
+  try {
+    await dbPromise
+    dbReady = true
+  } catch {
+    // MongoDB 不可用时继续（降级模式）
+  }
+}
 
-// ---- 导出 Express 应用 ----
-// Vercel @vercel/node runtime 自动处理 Express app
-export default app
+// ---- 导出 Vercel Serverless 处理器 ----
+// 使用动态 import 确保环境变量缺失时不会导致模块加载崩溃
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  try {
+    // 确保数据库已连接（非阻塞）
+    await ensureDB()
+
+    // 动态加载 Express 应用（首次加载后 Vercel 会缓存模块）
+    const { default: app } = await import('../server/src/app.js')
+    app(req, res)
+  } catch (err: any) {
+    console.error('[Vercel] 请求处理失败:', err.message)
+    res.status(500).json({
+      success: false,
+      code: 500,
+      message: '服务内部异常，请检查 Vercel 环境变量配置（MONGODB_URI, DEEPSEEK_API_KEY, AES_ENCRYPTION_KEY, CORS_ORIGIN）',
+    })
+  }
+}

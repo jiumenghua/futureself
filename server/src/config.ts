@@ -19,6 +19,13 @@ if (fs.existsSync(envPath)) {
 function requireEnv(key: string): string {
   const val = process.env[key]
   if (!val) {
+    // 在 Vercel Serverless 环境中，环境变量可能尚未配置
+    // 不抛出异常（会导���模块加载失败 → 请求超时），而是记录警告并返回空字符串
+    const isServerless = !!process.env.VERCEL || process.env.NODE_ENV === 'production'
+    if (isServerless) {
+      console.warn(`[Config] ⚠️ 缺少环境变量: ${key}（Vercel Serverless 模式下降级运行）`)
+      return ''
+    }
     throw new Error(`[Config] 缺少必需的环境变量: ${key}，请检查 .env 文件`)
   }
   return val
