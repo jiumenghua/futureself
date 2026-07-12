@@ -23,3 +23,6 @@ Thumbs.db
 # 调试日志
 npm-debug.log*
 render-payload.json
+
+.vercel
+.env*

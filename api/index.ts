@@ -3,7 +3,7 @@
 // 使用 createRequire 加载 CJS 编译产物，避免 ESM/CJS interop 问题
 // ============================================================
 
-import { createRequire } from 'node:module'
+import { createRequire } from 'module'
 
 // 用 CJS require 加载编译后的服务端代码
 const require = createRequire(import.meta.url)
