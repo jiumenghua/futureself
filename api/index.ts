@@ -1,23 +1,28 @@
 // ============================================================
 // api/index.ts — Vercel Serverless Function 入口
-// 导入编译后的 Express 应用（server/dist/app.js）
+// 使用 createRequire 加载 CJS 编译产物，避免 ESM/CJS interop 问题
 // ============================================================
 
-import app from '../server/dist/app.js'
+import { createRequire } from 'node:module'
+
+// 用 CJS require 加载编译后的服务端代码
+const require = createRequire(import.meta.url)
+const appModule = require('../server/dist/app.js')
+const app = appModule.default || appModule
 
 // ---- MongoDB 连接缓存 ----
 let dbReady = false
 let dbPromise: Promise<void> | null = null
 
-app.use('/api', async (_req, _res, next) => {
+app.use('/api', async (_req: any, _res: any, next: any) => {
   if (!dbReady) {
     if (!dbPromise) {
-      import('../server/dist/db.js').then(({ connectDB }) => {
-        dbPromise = connectDB()
-      }).catch(() => {
+      try {
+        const dbModule = require('../server/dist/db.js')
+        dbPromise = dbModule.connectDB()
+      } catch {
         dbPromise = Promise.resolve()
-      })
-      if (!dbPromise) dbPromise = Promise.resolve()
+      }
     }
     try {
       await dbPromise
